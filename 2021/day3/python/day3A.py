@@ -31,8 +31,6 @@ def main(argv):
                 if bit == "1":
                     bitCount[index,1] += 1
 
-    print(bitCount)
-
     gamma = ""
     epsilon = ""
 
