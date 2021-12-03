@@ -16,35 +16,79 @@ def main(argv):
             sys.exit()
         elif opt == '-i':
             inputFile = arg
-    
+
     with open(inputFile, "r") as fileIn:
         #read firstline to determine length of bit sequence
-        bitLen = len(fileIn.readline())
-        bitCount = np.zeros((bitLen,2))
-        # .readlines() to get all lines as a list and iterate
-        for line in fileIn.readlines():
-            bits = list(line)
-            for index, bit in enumerate(bits):
-                if bit == "0":
-                    bitCount[index,0] += 1
-                if bit == "1":
-                    bitCount[index,1] += 1
+        bitLen = len(fileIn.readline())-1
+        fileIn.seek(0)
+        bitList = fileIn.read().splitlines()
 
-    gamma = ""
-    epsilon = ""
+    O2Rate = int(bitCritO2(bitLen, bitList)[0],2)
+    print(O2Rate)
 
-    for index in bitCount:
-        if index[1]>index[0]:
-            gamma = gamma + "1"
-            epsilon = epsilon + "0"
-        
-        if index[1]<index[0]:
-            gamma = gamma + "0"
-            epsilon = epsilon + "1"
 
-    gammaRate = int(gamma, 2)
-    epsilonRate= int(epsilon, 2)
+    CO2Rate = int(bitCritCO2(bitLen, bitList)[0],2)
+    print(CO2Rate)
 
-    print(gammaRate*epsilonRate)
+    print(O2Rate*CO2Rate)
+
+def bitCounter(bitLen, bitList):
+    bitCount = np.zeros((bitLen,2))
+    for entry in bitList:
+        bits=list(entry)
+        for index, bit in enumerate(bits):
+            if bit == "0":
+                bitCount[index,0] += 1
+            if bit == "1":
+                bitCount[index,1] += 1
+
+    return bitCount
+
+#pay attention to reverse logic
+#O2 keep most, when equal keep 1
+def bitCritO2(bitLen, bitList):
+    for i in range(0,bitLen):
+        bitCount = bitCounter(bitLen, bitList)
+
+        counts=bitCount[i]
+        keepVal = counts.argmax()
+        if counts[0]==counts[1]:
+            keepVal=1
+
+        bitListDummy = []
+
+        for item in bitList:
+            if item[i] == str(keepVal):
+                bitListDummy.append(item)
+
+        if bitListDummy != []:
+            bitList = bitListDummy
+
+    return bitList
+
+
+
+#pay attention to reverse logic
+#O2 keep least, when equal keep 0
+def bitCritCO2(bitLen, bitList):
+    for i in range(0,bitLen):
+        bitCount = bitCounter(bitLen, bitList)
+
+        counts=bitCount[i]
+        keepVal = counts.argmin()
+        if counts[0]==counts[1]:
+            keepVal=0
+
+        bitListDummy = []
+
+        for item in bitList:
+            if item[i] == str(keepVal):
+                bitListDummy.append(item)
+
+        if bitListDummy != []:
+            bitList = bitListDummy
+
+    return bitList
+
 if __name__ == "__main__":
 	main(sys.argv[1:])
