@@ -23,6 +23,7 @@ def main(argv):
         #no loop today, only read one line.
         positions = list(map(int, list((fileIn.readline()).split(','))))
 
+#STUPID ANALYTICAL SOLUTIONS, SOMEWHAT CHEATING ESPECIALLY PART B
 #part A is easy (L1-norm?)
     targetPos = median(positions)
 
@@ -41,8 +42,13 @@ def main(argv):
         distance = abs(pos-targetPos)
         fuel += distance*(distance+1)/2
 
-    print(fuel) 
-    
+    print(fuel)
+
+#NUMERICAL SOLUTIONS (slower)
+    print(min(sum(abs(i - x) for x in positions) for i in range(min(positions), max(positions) + 1)))
+    print(min(sum(int(abs(i - x)*((abs(i - x)+1)/2)) for x in positions) for i in range(min(positions), max(positions) + 1)))
+
+
  
 
 if __name__ == "__main__":
