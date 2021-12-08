@@ -76,41 +76,22 @@ class display:
         self.digitMap = {}
         sigLenSort = self.lenSort(self.signals)
         #handle simple numbers (i.e. 1 of length 2, "7" (3), "4" (4), "8" (7))
-        for key in [2,3,4,7]:
-            if key in sigLenSort:
-                if key == 2: self.digitMap[1] = sorted(list(sigLenSort[key][0]))
-                if key == 3: self.digitMap[7] = sorted(list(sigLenSort[key][0]))
-                if key == 4: self.digitMap[4] = sorted(list(sigLenSort[key][0]))
-                if key == 7: self.digitMap[8] = sorted(list(sigLenSort[key][0]))
+        for digit, key in zip([1,7,4,8],[2,3,4,7]):
+            self.digitMap[digit] = sorted(list(sigLenSort[key][0]))
+       
+        #lookup / dict for remaining digits
+        digitOverlap = {10: 2, 11: 5, 12: 6, 13: 3, 14: 0, 15: 9}
 
         for key in [5, 6]:
             if key in sigLenSort:
                 for signal in sigLenSort[key]:
-                    overlap1478 = 0
-                    overlap1478 += len(set(self.digitMap[1]).intersection(list(signal)))
-                    overlap1478 += len(set(self.digitMap[4]).intersection(list(signal)))
-                    overlap1478 += len(set(self.digitMap[7]).intersection(list(signal)))
-#                    overlap1478 += len(digitMap[8].intersection(list(signal)))
-                    overlap1478 += key
+                    overlap1478=0
+                    for digit in [1,4,7,8]:
+                        overlap1478 += len(set(self.digitMap[digit]).intersection(list(signal)))
 
-                    if not 0 in self.digitMap and overlap1478 == 14:
-                        self.digitMap[0] = sorted(list(signal))
-
-                    if not 2 in self.digitMap and overlap1478 == 10:
-                        self.digitMap[2] = sorted(list(signal))
-
-                    if not 3 in self.digitMap and overlap1478 == 13:
-                        self.digitMap[3] = sorted(list(signal))
-
-                    if not 5 in self.digitMap and overlap1478 == 11:
-                        self.digitMap[5] = sorted(list(signal))
-
-                    if not 6 in self.digitMap and overlap1478 == 12:
-                        self.digitMap[6] = sorted(list(signal))
-
-                    if not 9 in self.digitMap and overlap1478 == 15:
-                        self.digitMap[9] = sorted(list(signal))
-
+                    if not digitOverlap[overlap1478] in self.digitMap:
+                        self.digitMap[digitOverlap[overlap1478]] = sorted(list(signal))
+                        
         return self.digitMap
 
     def displayValue(self):
