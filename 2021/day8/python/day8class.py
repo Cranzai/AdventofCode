@@ -28,9 +28,6 @@ def main(argv):
             #part B
             displaySum += current.displayValue()
 
-
-
-
     #print part A
     answerA = 0
     for length in simpleOccur:
@@ -91,7 +88,7 @@ class display:
 
                     if not digitOverlap[overlap1478] in self.digitMap:
                         self.digitMap[digitOverlap[overlap1478]] = sorted(list(signal))
-                        
+
         return self.digitMap
 
     def displayValue(self):
