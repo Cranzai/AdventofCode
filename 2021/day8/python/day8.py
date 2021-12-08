@@ -54,7 +54,7 @@ def main(argv):
                     digitMap[4] = signalLengthSort[info][0]
                 
 
-        deductKeys = [5, 6]
+        deductKeys = [5,6]
         for deduct in deductKeys:
                 for signal in signalLengthSort[deduct]:
                     overlap147 = 0
