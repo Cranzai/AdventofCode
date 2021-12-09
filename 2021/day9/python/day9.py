@@ -18,7 +18,8 @@ def main(argv):
             inputFile = arg
 
     day9 = heightMap(inputFile)
-    print(day9.sumValleyRisk())
+    print("A: ", day9.sumValleyRisk())
+    print("B: ", np.prod(day9.findBassins()))
 
 class heightMap:
     def __init__(self,input):
@@ -41,14 +42,16 @@ class heightMap:
                     self.map[y, x] = val
 
     def isValley(self, x, y):
+    	#AoC assignment only works with valleys of 1 unit wide.
+    	#hence self.map[y, pos] <= self.map[y,x]
         for pos in [x-1, x+1]:
             # "<" to compensate for indexing
             if pos >= 0 and pos < (self.mapX):
-                if self.map[y, pos] < self.map[y,x]: return False
+                if self.map[y, pos] <= self.map[y,x]: return False
 
         for pos in [y-1, y+1]:
             if pos >= 0 and pos < (self.mapY):
-                if self.map[pos, x] < self.map[y,x]: return False
+                if self.map[pos, x] <= self.map[y,x]: return False
 
         return True
 
@@ -66,10 +69,52 @@ class heightMap:
 
         riskSum = 0
         for valley in self.valleys:
-            print(valley, self.map[valley[1],valley[0]])
             riskSum += self.map[valley[1],valley[0]] + 1
 
         return riskSum
+
+    def bassinInspect(self,x,y):
+        newPoints = []
+        for pos in [x-1, x+1]:
+            # "<" to compensate for indexing
+            if pos >= 0 and pos < (self.mapX):
+                if self.map[y, pos] >= self.map[y,x] and self.map[y,pos] != 9:
+                    newPoints.append([pos,y])
+
+        for pos in [y-1, y+1]:
+            if pos >= 0 and pos < (self.mapY):
+                if self.map[pos, x] >= self.map[y,x] and self.map[pos,x] != 9: 
+                    newPoints.append([x,pos])
+
+        return newPoints
+
+    def bassinSize(self, valley):
+        bassin = [valley]
+        elementsAdded = 1
+
+        #unfortunate while true loop
+        while True:
+            #save the last element before adding the newpoints
+            #reduces number of elements in each consecutive loop.
+            if elementsAdded == 0: break
+            prevLastElement = len(bassin) - elementsAdded
+            elementsAdded = 0
+            for pos in bassin[prevLastElement:]:
+                newPoints = self.bassinInspect(pos[0],pos[1])
+                for point in newPoints:
+                    if not point in bassin:
+                        bassin.append(point)
+                        elementsAdded +=1
+
+        return len(bassin)
+
+    def findBassins(self):
+        self.bassinSizes = []
+        for valley in self.valleys:
+            self.bassinSizes.append(self.bassinSize(valley))
+
+        #return three highest values
+        return sorted(self.bassinSizes)[-3:]
 
 
 if __name__ == "__main__":
