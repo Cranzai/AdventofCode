@@ -93,10 +93,9 @@ class heightMap:
         elementsAdded = 1
 
         #unfortunate while true loop
-        while True:
+        while elementsAdded !=0:
             #save the last element before adding the newpoints
             #reduces number of elements in each consecutive loop.
-            if elementsAdded == 0: break
             prevLastElement = len(bassin) - elementsAdded
             elementsAdded = 0
             for pos in bassin[prevLastElement:]:
