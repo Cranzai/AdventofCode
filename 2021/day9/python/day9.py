@@ -107,6 +107,9 @@ class heightMap:
         return len(bassin)
 
     def findBassins(self):
+        if not self.valleys:
+           self.findValleys()
+           
         self.bassinSizes = []
         for valley in self.valleys:
             self.bassinSizes.append(self.bassinSize(valley))
