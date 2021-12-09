@@ -92,7 +92,6 @@ class heightMap:
         bassin = [valley]
         elementsAdded = 1
 
-        #unfortunate while true loop
         while elementsAdded !=0:
             #save the last element before adding the newpoints
             #reduces number of elements in each consecutive loop.
