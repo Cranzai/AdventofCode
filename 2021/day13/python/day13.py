@@ -51,14 +51,14 @@ class transparency:
         maxX = max([pt[0] for pt in folded]) + 1
         maxY = max([pt[1] for pt in folded]) + 1
 
-        grid = np.zeros((maxX, maxY))
+        grid = np.zeros((maxY, maxX))
         for x, y in folded:
-            grid[x][y] = 1
+            grid[y][x] = 1
 
         #quite overkill matplotlib visualization, very nice though
         fig = plt.figure()
         ax1 = fig.add_subplot()
-        ax1.imshow(np.transpose(grid), interpolation = 'nearest', cmap=cm.Greys_r)
+        ax1.imshow(grid, interpolation = 'nearest', cmap=cm.Greys_r)
         plt.show()
 
 if __name__ == "__main__":
