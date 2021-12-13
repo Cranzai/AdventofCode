@@ -18,43 +18,30 @@ class transparency:
         self.instructs = instructions
 
     def fold(self, foldAll):
-        folding = self.pts 
-        folded = []
+        folded = self.pts
+        
+        instuctions = self.instructs[:1]
+        if foldAll:
+            instructions = self.instructs
 
-        axis, index = self.instructs[0]
-        for x, y in folding:
-            xNew = x
-            yNew = y
-            if axis == "x" and x > int(index):
-                xNew = int(index) - (x - int(index))
+        for axis, index in instructions:               
+            folding = folded.copy()
+            folded = []
+
+            for x, y in folding:                   
+                xNew = x
                 yNew = y
 
-            if axis == "y" and y > int(index):
-                yNew = int(index) - (y - int(index))
-                xNew = x
-
-            if not [xNew, yNew] in folded:
-                folded.append([xNew, yNew])
-        
-        if foldAll:
-            for axis, index in self.instructs[1:]:               
-                folding = folded.copy()
-                folded = []
-
-                for x, y in folding:                   
-                    xNew = x
+                if axis == "x" and x > int(index):
+                    xNew = int(index) - (x - int(index))
                     yNew = y
 
-                    if axis == "x" and x > int(index):
-                        xNew = int(index) - (x - int(index))
-                        yNew = y
+                if axis == "y" and y > int(index):
+                    xNew = x
+                    yNew = int(index) - (y - int(index))
 
-                    if axis == "y" and y > int(index):
-                        xNew = x
-                        yNew = int(index) - (y - int(index))
-
-                    if not [xNew, yNew] in folded:
-                        folded.append([xNew, yNew])
+                if not [xNew, yNew] in folded:
+                    folded.append([xNew, yNew])
 
         return(folded)
 
