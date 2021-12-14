@@ -2,6 +2,7 @@
 #it won't ever reach step 40 realistically
 
 #hence use an approach in which you moniter all pairs.
+#please note this code was heavily inspired by others.
 
 import sys
 from collections import defaultdict, Counter
