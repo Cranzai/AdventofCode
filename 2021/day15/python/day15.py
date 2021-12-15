@@ -1,13 +1,14 @@
 import sys
 import numpy as np
 from collections import defaultdict
+from collections import deque
 import copy
 
 def main(inputFile):
-    #sys.setrecursionlimit(20)
+    sys.setrecursionlimit(25)
     mapA = riskMap(inputFile)
-    mapA.pathfinder((0,0), [])
-    print(mapA.lowpath())
+    mapA.pathfinder((0,0), (mapA.mapx, mapA.mapy))
+    print(mapA.paths)
     
 
 class riskMap:
@@ -20,42 +21,46 @@ class riskMap:
         self.map = np.array(self.map)
         self.mapx, self.mapy = self.map.shape
 
-        #fixed end point to bottom right.
-        self.finish = (self.mapx-1,self.mapy-1)
-
-        self.visited = set()
         self.paths = []
 
-        self.counter = 0
+    def pathfinder(self, start, finish):
+        myVisited = set()
+        myVisited.add(start)
+        myPath = []
+        myPath.append(start)
+        self.finish = finish
 
-    def pathfinder(self, origin, currentPath):
-        self.visited.add(origin)
-        newPath = copy.deepcopy(currentPath)
-        newPath.append(origin)
-#        print('path', newPath)
+        self.recursiveFind(myPath, myVisited)
 
-        x, y = origin
-        #two step list comprehension for convenience
-        rawNeighbours = [(x+dx, y+dy) for dx, dy in [(0, 1),  (-1, 0), (1, 0), (0, -1)]]
-        neighbours = [neighbour for neighbour in rawNeighbours if not neighbour in self.visited]
+    #as it stands now this nicely prints all nodes in the correct order....
+    def recursiveFind(self, path, visited):
+        if self.paths:
+            return
 
+        newPath = copy.deepcopy(path)
+        newVisited = copy.deepcopy(visited)
+        point = newPath [-1]
+
+        neighbours = [neighbour for neighbour in self.neighbours(point) if not neighbour in visited]
+
+        #neighbourdict contains the coordinates of neighbours and their value.
         neighbourdict = defaultdict(int)
-        #get values of neighbours, but needs to be linked to coords...
         for x, y in neighbours:
-            if 0 <= x < self.mapx and 0 <= y < self.mapy:
-                neighbourdict[(x,y)]=self.map[x][y]
+            neighbourdict[(x,y)]=self.map[x][y]
 
-#        print('visited', self.visited)
-#        print('neighbours', sorted(neighbourdict.items(), key=lambda x: x[1]))
-        #go over all neighbours in ascending order of their value.
-        for position, value in sorted(neighbourdict.items(), key=lambda x: x[1]):
+        for position, value in sorted(neighbourdict.items(),key=lambda x: x[1]):
+            print(position)
             if position == self.finish:
-                print('hooray', len(newPath))
-                newPath.append(position)
+                print(newPath)
                 self.paths.append(newPath)
                 return
-            else:
-                self.pathfinder(position, newPath)
+
+            newPath.append(position)
+            #add all current branches to visited...
+            for neighbour in neighbours:
+                newVisited.add(neighbour)
+
+            self.recursiveFind(newPath, newVisited)
 
     def lowpath(self):
         sums = []
@@ -67,7 +72,12 @@ class riskMap:
             sums.append(pathsum)
 
         return sums
-
+        
+    def neighbours(self, point):
+        x, y = point
+        allNeighbours = [(x+dx, y+dy) for dx, dy in [(0, 1),  (-1, 0), (1, 0), (0, -1)]]
+        validNeighbours = [(x,y) for x, y in allNeighbours if 0 <= x < self.mapx and 0 <= y < self.mapy]
+        return validNeighbours
 
 if __name__ == "__main__":
     #only pass through the first argument which should be the inputfile
