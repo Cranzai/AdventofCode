@@ -4,6 +4,7 @@ from collections import defaultdict
 import copy
 
 def main(inputFile):
+    #sys.setrecursionlimit(20)
     mapA = riskMap(inputFile)
     mapA.pathfinder((0,0), [])
     print(mapA.lowpath())
@@ -31,10 +32,11 @@ class riskMap:
         self.visited.add(origin)
         newPath = copy.deepcopy(currentPath)
         newPath.append(origin)
-        x, y = origin
+#        print('path', newPath)
 
+        x, y = origin
         #two step list comprehension for convenience
-        rawNeighbours = [(x+dx, y+dy) for dx in [-1, 0, 1] for dy in [-1, 0, 1] if not abs(dx)==abs(dy) and 0 <= x < self.mapx and 0 <= y < self.mapy]
+        rawNeighbours = [(x+dx, y+dy) for dx, dy in [(0, 1),  (-1, 0), (1, 0), (0, -1)]]
         neighbours = [neighbour for neighbour in rawNeighbours if not neighbour in self.visited]
 
         neighbourdict = defaultdict(int)
@@ -43,9 +45,10 @@ class riskMap:
             if 0 <= x < self.mapx and 0 <= y < self.mapy:
                 neighbourdict[(x,y)]=self.map[x][y]
 
+#        print('visited', self.visited)
+#        print('neighbours', sorted(neighbourdict.items(), key=lambda x: x[1]))
         #go over all neighbours in ascending order of their value.
         for position, value in sorted(neighbourdict.items(), key=lambda x: x[1]):
-            print(position)
             if position == self.finish:
                 print('hooray', len(newPath))
                 newPath.append(position)
