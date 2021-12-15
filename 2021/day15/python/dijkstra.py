@@ -10,7 +10,7 @@ def main(inputFile):
 
     #pathSum = 0
     #for point in path:
-    #    pathSum += tile.mapSave[point]
+    #    pathSum += tile.map0[point]
 
     #print(pathSum)
 
@@ -31,7 +31,7 @@ class riskTile:
         with open(mapFile, 'r') as f:
             self.map = {(x, y): float(num) for (y, line) in enumerate(f.read().split("\n")) for (x, num) in enumerate(line)}
 
-        self.mapSave = copy.deepcopy(self.map)
+        self.map0 = copy.deepcopy(self.map)
 
         self.x = max(map(lambda x: x[0], self.map.keys()))
         self.y = max(map(lambda y: y[1], self.map.keys()))
@@ -76,25 +76,19 @@ class riskTile:
 
 class riskMap(riskTile):
     def extend(self, factor):
-        x_max = self.x
-        y_max = self.y
-
-        costs = self.map
-        costs_b = {}
+        newMap = {}
         for n in range(0, factor):
-            for (x, y), v in costs.items():
-                costs_b[((x_max+1)*n+x, y)] = (v+n)-9 if (v + n) >= 10 else (v+n)
-        costs = costs_b
-        costs_b = {}
-        for n in range(0, factor):
-            for (x, y), v in costs.items():
-                costs_b[(x, (y_max+1)*n+y)] = (v+n)-9 if (v + n) >= 10 else (v+n)
-        costs = costs_b
+            for (x, y), v in self.map0.items():
+                newMap[((self.x+1)*n+x, y)] = (v+n)-9 if (v + n) >= 10 else (v+n)
 
-        self.map = costs
+        for n in range(0, factor):
+            for (x, y), v in self.map0.items():
+                newMap[(x, (y_max+1)*n+y)]] = (v+n)-9 if (v + n) >= 10 else (v+n)
+
+        self.map = newMap
+        self.map0 = newMap
         self.x = max(map(lambda x: x[0], self.map.keys()))
         self.y = max(map(lambda y: y[1], self.map.keys()))
-        self.mapSave = self.map
 
 
 if __name__ == "__main__":
