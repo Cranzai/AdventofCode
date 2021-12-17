@@ -26,7 +26,7 @@ class BITS:
             "F": "1111"
         }
 
-        self.versionSum = 0
+        self.versions = []
 
     def decode(self):
         self.binary = deque()
@@ -44,7 +44,7 @@ class BITS:
             return values
 
         version = int(''.join([str(block.popleft()) for i in range(3)]), 2)
-        self.versionSum += version
+        self.versions.append(version)
         typeID = int(''.join([str(block.popleft()) for i in range(3)]), 2)
 
         #operator
@@ -109,7 +109,6 @@ class BITS:
             if values[0] > values[1]:
                 result = 1
 
-
         elif operator == 6:
             result = 0
             if values[0] < values[1]:
@@ -124,5 +123,6 @@ class BITS:
 
 if __name__ == "__main__":
     message = BITS(sys.argv[1])
+    print(message.versions)
     print(message.decode())
 
