@@ -123,6 +123,5 @@ class BITS:
 
 if __name__ == "__main__":
     message = BITS(sys.argv[1])
-    print(message.versions)
     print(message.decode())
 
