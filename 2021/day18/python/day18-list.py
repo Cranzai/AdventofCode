@@ -50,4 +50,10 @@ class homework:
         
 
 if __name__ == "__main__":
-    part_a = homework(sys.argv[1])
+    #first read input into a single nested list
+    with open(sys.argv[1], "r") as file:
+        addition = eval(f.readline().rstrip("\n"))
+            for line in f:
+                addition = [addition, eval(line.rstrip("\n"))]
+
+    #process nested list into a tree.
