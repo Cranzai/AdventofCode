@@ -48,6 +48,7 @@ class node:
     def _assemble(self, root, depth=0):
         self._depth = depth
         self._root = root
+        #recursively digging for values, if its a value max depth reached
         if self.isvalue:
             return
         for node in [self.left, self.right]:
@@ -57,10 +58,10 @@ class node:
 
     #function for solving the three according to the snailfish math
     #always perform first operation that is encountered...
-    def solve(self):
-        for node in self._traverse():
-            #explode, triggers on top node
-            if max_depth == node._depth:
+#    def solve(self):
+#        for node in self._traverse():
+#            #explode, triggers on top node
+#            if max_depth == node._depth:
 
 
 
@@ -97,4 +98,4 @@ if __name__ == "__main__":
             addition = [addition, eval(line.rstrip("\n"))]
 
     tree = node.build(addition)
-    tree.solve()
+    print(tree)
