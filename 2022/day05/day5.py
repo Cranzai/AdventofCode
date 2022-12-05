@@ -27,5 +27,5 @@ with open("day5.inp") as input:
 
             stacksB[target].extendleft(moveB)
 
-    print([stacksA[i+1][0] for i in range(len(stacksA))])
-    print([stacksB[i+1][0] for i in range(len(stacksB))])
+    print("".join([stacksA[i+1][0] for i in range(len(stacksA))]))
+    print("".join([stacksB[i+1][0] for i in range(len(stacksB))]))
