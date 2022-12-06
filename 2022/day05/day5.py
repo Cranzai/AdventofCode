@@ -10,6 +10,7 @@ with open("day5.inp") as input:
             if not "[" in line:
                 instructions=True
                 stacksB = copy.deepcopy(stacksA)
+
                 continue 
             else:
                 for i in range(int(len(line)/4)):
