@@ -26,37 +26,32 @@ with open("day8.inp") as input:
             left = 0
             if not c == 0:
                 for neighbour in reversed(row[:c]):
-                    if neighbour < val:
-                        left +=1
-                    elif neighbour >= val:
-                        left +=1
+                    left +=1
+                    if neighbour >=val:
                         break
+
             #look right
             right = 0
             if not c == width-1:
                 for neighbour in row[c+1:]:
-                    if neighbour < val:
-                        right +=1
-                    elif neighbour >= val:
-                        right +=1
+                    right += 1
+                    if neighbour >=val:
                         break
+
             #look up
             up = 0
             if not r == 0:
                 for neighbour in reversed(col[:r]):
-                    if neighbour < val:
-                        up +=1
-                    elif neighbour >= val:
-                        up +=1
+                    up += 1
+                    if neighbour >= val:
                         break
+
             #look down
             down = 0
             if not r == height-1:
                 for neighbour in col[r+1:]:
-                    if neighbour < val:
-                        down +=1
-                    elif neighbour >= val:
-                        down +=1
+                    down += 1
+                    if neighbour >= val:
                         break
             #score
             if left*right*up*down > highscore:
