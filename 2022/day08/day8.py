@@ -1,6 +1,8 @@
 with open("day8.inp") as input:
     #read grid
     grid = [list(map(int, row.strip())) for row in input.readlines()]
+    #transpose grid
+    gridT = list(map(list, zip(*grid)))
 
     height = len(grid)
     width = len(grid[0])
@@ -9,7 +11,7 @@ with open("day8.inp") as input:
     visible = 0
     for r, row in enumerate(grid):
         for c, val in enumerate(row):
-            col = [r[c] for r in grid]
+            col = gridT[c]
             if (r==0 or r==height-1) or (c==0 or c == height-1):
                 visible +=1
             elif (max(row[:c]) < val or max(row[c+1:]) < val) or (max(col[:r]) < val or max(col[r+1:]) < val):
@@ -21,7 +23,7 @@ with open("day8.inp") as input:
     highscore = 0
     for r, row in enumerate(grid):
         for c, val in enumerate(row):
-            col = [r[c] for r in grid]
+            col = gridT[c] 
             #look left
             left = 0
             if not c == 0:
