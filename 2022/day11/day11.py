@@ -15,17 +15,28 @@ class monkey:
 
     def test(self, worry, bored):
         new = self.inspect(worry)
-        if bored: new = int(new / 3)
+        if bored: new = new // 3
         if new % self.crit == 0:
             return self.true, new
         else:
             return self.false, new
 
 def rounds(monkeys, num, bored=True):
+    if not bored:
+        #if "not bored", ints will get too big
+        #need to use Chinese Remainder Theorem
+        mod = 1
+        for monkey in monkeys:
+            mod *= monkey.crit
+
     for _ in range(num):
         for monkey in monkeys:
             for item in monkey.items:
                 target, newitem = monkey.test(item, bored)
+
+                if not bored:
+                    newitem = newitem % mod
+
                 monkeys[target].items.append(newitem)
 
             monkey.items = []
@@ -66,4 +77,4 @@ with open("day11.inp") as input:
     #Rounds
     monkeys2 = copy.deepcopy(monkeys)
     print("Part A: ", rounds(monkeys, 20))
-    print("Part B: ", rounds(monkeys2, 1000, False))
+    print("Part B: ", rounds(monkeys2, 10000, False))
