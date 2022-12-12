@@ -5,10 +5,7 @@ def charRisk(char):
         char = "a"
     if char == "E":
         char = "z"
-    return ord(char)-96
-
-def flatten(l):
-    return [item for sublist in l for item in sublist]
+    return ord(char)
 
 class pathMap:
     def __init__(self, mapFile):
