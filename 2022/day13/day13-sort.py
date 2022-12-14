@@ -28,16 +28,22 @@ def partA(inp):
 
 def partB(inp):
     packets = [eval(line.strip()) for line in inp if line != ""]
+    packets.extend([[[2]], [[6]]])
    
-    #no need to sort, just need to know how many smaller than [[2]] and [[6]]
-    ans = 1
-    for i, div in enumerate([[[2]], [[6]]]):
-        smaller = 0
-        for packet in packets:
-            if checkPair(packet, div) < 0:
-                smaller += 1
+    #simple insertion sort
+    for i in range(1, len(packets)):
+        key = packets[i]
+        j = i-1
+        while j >= 0 and (checkPair(key, packets[j]) <= 0):
+            packets[j+1] = packets[j]
+            j -= 1
+        packets[j+1] = key
 
-        ans *= smaller+(i+1)
+    #find [[2]] and [[6]]
+    ans = 1
+    for i, packet in enumerate(packets):
+        if packet == [[2]] or packet == [[6]]:
+            ans *= (i+1)
 
     return ans
 
