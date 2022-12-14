@@ -39,21 +39,27 @@ def movegrain(spawn, abyss, rocks, sand):
         return movegrain((x+1,y+1), abyss, rocks, sand)
     #stopped
     else:
-        sand.add((x, y))
-        return y, sand
+        if y == abyss:
+            rocks.add((x,y))
+        else:
+            sand.add((x,y))
+
+        return y, sand, rocks
 
 def sandfill(rocks, abyss, xspawn):
     sand = set()
     y=0
-    while y < abyss: 
-        y, sand = movegrain([500,0], abyss, rocks, sand)
+    while y <= abyss: 
+        y, sand, rocks = movegrain([500,0], abyss, rocks, sand)
+        if y == 0:
+            break
 
-    return len(sand)-1
+    return len(sand)
 
-with open("day14demo.inp") as input:
+with open("day14.inp") as input:
     #build set of boundary coords
     file = input.read()
     rocks, abyss = cave(file)
 
-    print(sandfill(rocks, abyss, 500))
+    print(sandfill(rocks, abyss+2, 500))
     
