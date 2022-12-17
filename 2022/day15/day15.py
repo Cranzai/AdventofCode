@@ -23,6 +23,50 @@ def partA(sensors, beacons, y):
 
     return len(occupied)
 
+def outsidediamond(sensor, beacon):
+    x, y = sensor
+    dist = manhattan(sensor, beacon)
+
+    corners = list()
+    #top
+    corners.append((x, y+(dist+1)))
+    #right
+    corners.append((x+(dist+1), y))
+    #down
+    corners.append((x, y-(dist+1)))
+    #left
+    corners.append((x-(dist+1), y))
+    #add another top for easier looping
+    corners.append((x, y+(dist+1)))
+
+    diags = list()
+    for a, b in zip(corners, corners[1:]):
+        xr = list(range(min(a[0],b[0]), max(a[0],b[0])+1))
+        yr = list(range(min(a[1],b[1]), max(a[1],b[1])+1))
+        diags.extend([(x,y) for x, y in zip(xr, yr)])
+
+    return set(diags)
+
+def partB(sensors, beacons, bounds):
+    chances = set()
+    
+    #get set of diagonal intersects
+    for sensorA, beaconA in zip(sensors, beacons):
+        for sensorB, beaconB in zip(sensors, beacons):
+            if sensorA != sensorB:
+                ax, ay = sensorA
+                bx, by = sensorB
+                distA = manhattan(sensorA, beaconA)
+                distB = manhattan(sensorB, beaconB)
+
+                diagsA = outsidediamond(sensorA, beaconA)
+                diagsB = outsidediamond(sensorB, beaconB)
+
+                overlap = diagsA.intersection(diagsB)
+                chances = chances.union(overlap)
+
+    return chances
+
 with open("day15demo.inp") as file:
     sensors = []
     beacons = []
@@ -32,4 +76,6 @@ with open("day15demo.inp") as file:
         sensors.append(coords[:2])
         beacons.append(coords[2:])
 
-    print("Part A: ", partA(sensors, beacons, 10))
+    print("Part B: ", partB(sensors, beacons, [0,20]))
+    #print("Part A: ", partA(sensors, beacons, 2000000))
+    #print("Part B: ", partB(sensors, beacons, [0,4000000]))
