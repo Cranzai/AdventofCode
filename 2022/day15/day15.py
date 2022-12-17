@@ -16,14 +16,9 @@ def partA(sensors, beacons, y):
                 if (manhattan(sensor, [x,y]) <= dist) and ([x,y] != beacon):
                     occupied.add((x,y))
 
-    #for beacon in beacons:
-    #    if beacon[1]==y:
-    #        if tuple(beacon) in occupied:
-    #            occupied.remove(tuple(beacon))
-
     return len(occupied)
 
-def outsidediamond(sensor, beacon):
+def corners(sensor, beacon):
     x, y = sensor
     dist = manhattan(sensor, beacon)
 
@@ -36,38 +31,53 @@ def outsidediamond(sensor, beacon):
     corners.append((x, y-(dist+1)))
     #left
     corners.append((x-(dist+1), y))
-    #add another top for easier looping
-    corners.append((x, y+(dist+1)))
+    
+    return corners
 
-    diags = list()
-    for a, b in zip(corners, corners[1:]):
-        xr = list(range(min(a[0],b[0]), max(a[0],b[0])+1))
-        yr = list(range(min(a[1],b[1]), max(a[1],b[1])+1))
-        diags.extend([(x,y) for x, y in zip(xr, yr)])
+def covered(sensors, beacons, chance):
+    for sensor, beacon in zip(sensors, beacons):
+        if manhattan(sensor, chance) <= manhattan(sensor, beacon):
+            return True
 
-    return set(diags)
+    return False
 
 def partB(sensors, beacons, bounds):
-    chances = set()
+    candidates = set()
     
-    #get set of diagonal intersects
-    for sensorA, beaconA in zip(sensors, beacons):
-        for sensorB, beaconB in zip(sensors, beacons):
-            if sensorA != sensorB:
-                ax, ay = sensorA
-                bx, by = sensorB
-                distA = manhattan(sensorA, beaconA)
-                distB = manhattan(sensorB, beaconB)
+    #diagonals for each sensor
+    diags1 = list()
+    diags2 = list()
+    for sensor, beacon in zip(sensors, beacons):
+        top, right, bottom, left = corners(sensor, beacon)
+        diags1.append((bottom, right))
+        diags1.append((left, top))
+        diags2.append((left, bottom))
+        diags2.append((top, right))
 
-                diagsA = outsidediamond(sensorA, beaconA)
-                diagsB = outsidediamond(sensorB, beaconB)
+    for a,b in diags1:
+        for c,d in diags2:
+            # calculate intersection point via x-axis intersection
+            d1x1, d1y1 = a
+            d1x2, d1y2 = b
+            d2x1, d2y1 = c
+            d2x2, d2y2 = d
 
-                overlap = diagsA.intersection(diagsB)
-                chances = chances.union(overlap)
+            x1 = (d1x1 - d1y1)
+            x2 = (d2x1 + d2y1)
+            d = x2 - x1
+            if d % 2 != 0: continue  # not on integer point
+            y = d // 2
+            x = x1 + y
+            assert x == x2 - y
+            if (max(bounds[0], d1x1, d2x1) <= x <= min(bounds[1], d1x2, d2x2) and
+                max(bounds[0], d1y1, d2y2) <= y <= min(bounds[1], d1y2, d2y1)):
+                candidates.add((x, y))
+    
+    # Find the only candidate that is not covered by any sensors:
+    answer, =(4000000 * x + y for x, y in candidates if not covered(sensors, beacons, (x,y)))
+    return answer
 
-    return chances
-
-with open("day15demo.inp") as file:
+with open("day15.inp") as file:
     sensors = []
     beacons = []
 
@@ -76,6 +86,6 @@ with open("day15demo.inp") as file:
         sensors.append(coords[:2])
         beacons.append(coords[2:])
 
-    print("Part B: ", partB(sensors, beacons, [0,20]))
+    #print("Part B: ", partB(sensors, beacons, [0,20]))
     #print("Part A: ", partA(sensors, beacons, 2000000))
-    #print("Part B: ", partB(sensors, beacons, [0,4000000]))
+    print("Part B: ", partB(sensors, beacons, [0,4000000]))
