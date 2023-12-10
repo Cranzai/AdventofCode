@@ -18,7 +18,7 @@ with open("day01.inp", "r") as input:
 
     for line in input.readlines():
         nums = []
-        for num in [item for row in re.findall(pattern,line) for item in row]:
+        for num in [item if not item="" for row in re.findall(pattern,line) for item in row]:
             if num in num_dict.keys():
                 nums.append(num_dict[num])
             elif num in num_dict.values():
