@@ -1,7 +1,6 @@
 import re
 
 pile = open("day04.inp", "r")
-
 scratchcards = [(re.split(r"\:|\|", line.strip())[1].strip().split(), re.split(r"\:|\|", line.strip())[2].strip().split()) for line in pile.readlines()]
 
 #part A
@@ -22,3 +21,4 @@ for i, card in enumerate(scratchcards):
         multipliers[i+j+1] += 1*multipliers[i]
 
 print(sum(multipliers))
+ 
