@@ -68,5 +68,5 @@ class CamelCards:
                 self.sum += bid*rank
                 rank +=1
 
-print(CamelCards("day07.inp", "A").sum)
-print(CamelCards("day07.inp", "B").sum)
+print("A: ", CamelCards("day07.inp", "A").sum)
+print("B: ", CamelCards("day07.inp", "B").sum)
